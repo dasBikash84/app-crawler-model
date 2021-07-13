@@ -1,5 +1,6 @@
 package com.dasBikash.app_crawler_model
 
+import android.view.View
 import androidx.annotation.Keep
 
 
@@ -32,15 +33,46 @@ import androidx.annotation.Keep
  * no text input performed during auto(unscripted) test. A fully qualified resource identifier in the form of "package:type/entry"
  * has to be provided.
  *
- * @property defaultEditTextIdValueMap a map of resource id to `default value`s for `EditText` in auto test mode.
- * `String` key has to be fully qualified resource identifier in the form of "package:type/entry" for `Edittext` and for map `value`,
- * value of intended input of `EditText`.
+ * @property editTextValueGeneratorsById A map of `resource id` to `input value generator function` to calculate input value for matching
+ * `EditText` in auto test mode. `String` key has to be fully qualified resource identifier in the form of "package:type/entry" for target `Edittext`
+ * and for map `value`, a generator function has to be provided, which will be called if ID match found during app crawler action, injecting
+ * subject EditText as View and corresponding resource id as String parameters.
  *
- * @property defaultEditTextHintValueMap a map of `hint text` to `default value`s for `EditText` in auto test mode. For value input in
- * `EditText`, "resource id" matching will have higher priority than "hint". First "resource id" will be checked for map, if failed then "hint"
- * text will be checked.
+ * Example param instance could be as below:
  *
- * * */
+ * ```
+ *   editTextValueGeneratorsById = mapOf(
+ *       "com.example.package_name:id/etQuery" to { view, resId -> "query_value"},
+ *       "com.example.package_name:id/etData" to { view, resId -> "data_value"},
+ *       "com.example.package_name:id/etUserName" to { view, resId -> "data_value"},
+ *   )
+ *```
+ *
+ * as `view` and `resource id` is injected into the generator function, input value of target
+ * EditText can be calculated according to app state.
+ *
+ *
+ * @property editTextValueGeneratorsByHint A map of `hint` to `input value generator function` to calculate input value for matching
+ * `EditText` in auto test mode. `String` key is `hint` text of target `Edittext` and for map `value`, a generator function has to be provided,
+ * which will be called if `hint` match found during app crawler action, injecting subject EditText as View and corresponding `hint` as
+ * String parameters.
+ *
+ * Example param instance could be as below:
+ *
+ * ```
+ *   editTextValueGeneratorsById = mapOf(
+ *       "hint_query" to { view, resId -> "query_value"},
+ *       "hint_Data" to { view, resId -> "data_value"},
+ *       "hint_UserName" to { view, resId -> "data_value"},
+ *   )
+ *```
+ *
+ * as `view` and `hint` is injected into the generator function, input value of target
+ * EditText can be calculated according to app state.
+ *
+ * For more example code please [`visit`](https://github.com/dasBikash84/app-crawler)
+ *
+ * */
 @Keep
 data class TestSettings(
     val testScriptPath:String?=null,
@@ -51,6 +83,6 @@ data class TestSettings(
     val requestMethodFilter: RequestMethodFilter? = null,
     val defaultButtonResIdForDialog:String?=null,
     val editTextIdsToIgnore:List<String>? = null,
-    val defaultEditTextIdValueMap:Map<String,Any>? = null,
-    val defaultEditTextHintValueMap:Map<String,Any>? = null
+    val editTextValueGeneratorsById:Map<String,(View, String) -> String>? = null,
+    val editTextValueGeneratorsByHint:Map<String,(View, String) -> String>? = null,
 )
