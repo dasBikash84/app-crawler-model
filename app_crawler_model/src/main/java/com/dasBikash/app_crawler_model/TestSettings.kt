@@ -13,7 +13,7 @@ import androidx.annotation.Keep
  *                              directory of respective app's private storage
  * @property enableClickBlocker if true all touch events will be blocked during test
  *
- * @property maxRunTimeMinutes Maximum test run time in minutes (>=30 will be truncated to 30)
+ * @property maxRunTimeMinutes Maximum test run time in minutes (>=120 will be truncated to 120)
  *
  * @property runOnlyScript whether to run only script or run unscripted robo test
  *                          also, at the end of scripted action execution.
@@ -85,4 +85,8 @@ data class TestSettings(
     val editTextIdsToIgnore:List<String>? = null,
     val editTextValueGeneratorsById:Map<String,(View, String) -> String>? = null,
     val editTextValueGeneratorsByHint:Map<String,(View, String) -> String>? = null,
-)
+){
+    companion object{
+        const val MAX_TEST_RUN_TIME_MINUTES: Int = 120
+    }
+}
