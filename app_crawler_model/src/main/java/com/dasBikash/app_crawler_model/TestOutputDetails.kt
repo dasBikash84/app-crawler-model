@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
  *  Class containing info of generated test reports regarding last completed robo test
  *
  *  @property reportDirectory Path to directory containing generated test reports
- *  @property testScriptPath Test script path if provided else null
+ *  @property testScriptPaths Comma separated test script paths if provided else null
  *  @property reportFileLocation location of generated json test report relative to `reportDirectory`
  *  @property screenShotLocations location of screen-shot files relative to `reportDirectory`
  *  @property logFileLocation location of `logcat` file relative to `reportDirectory`
@@ -20,7 +20,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class TestOutputDetails(
     val reportDirectory:String?,
-    val testScriptPath:String?,
+    val testScriptPaths:String?,
     val reportFileLocation:String?,
     val screenShotLocations:List<String>,
     val logFileLocation:String?,

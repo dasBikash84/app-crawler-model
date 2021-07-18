@@ -7,8 +7,9 @@ import androidx.annotation.Keep
 /**
  * Class to provide test settings during test launch
  *
- * @property testScriptPath `Remote/local(Private app storage)/assets` script path, if null given then
+ * @property testScriptPaths List of `Remote/local(Private app storage)/assets` script paths, if null given then
  *                          auto test will run
+ *
  * @property useFilesDirForReport for true report files will be saved in `files` directory else in `cache
  *                              directory of respective app's private storage
  * @property enableClickBlocker if true all touch events will be blocked during test
@@ -75,7 +76,7 @@ import androidx.annotation.Keep
  * */
 @Keep
 data class TestSettings(
-    val testScriptPath:String?=null,
+    val testScriptPaths:List<String>?=null,
     val useFilesDirForReport:Boolean = false,
     val enableClickBlocker:Boolean = true,
     val maxRunTimeMinutes: Int = 5,
@@ -86,6 +87,30 @@ data class TestSettings(
     val editTextValueGeneratorsById:Map<String,(View, String) -> String>? = null,
     val editTextValueGeneratorsByHint:Map<String,(View, String) -> String>? = null,
 ){
+    constructor(
+        testScriptPath:String?=null,
+        useFilesDirForReport:Boolean = false,
+        enableClickBlocker:Boolean = true,
+        maxRunTimeMinutes: Int = 5,
+        runOnlyScript: Boolean = false,
+        requestMethodFilter: RequestMethodFilter? = null,
+        defaultButtonResIdForDialog:String?=null,
+        editTextIdsToIgnore:List<String>? = null,
+        editTextValueGeneratorsById:Map<String,(View, String) -> String>? = null,
+        editTextValueGeneratorsByHint:Map<String,(View, String) -> String>? = null
+    ):this(
+        testScriptPaths = testScriptPath?.let { listOf(it) },
+        useFilesDirForReport = useFilesDirForReport,
+        enableClickBlocker = enableClickBlocker,
+        maxRunTimeMinutes = maxRunTimeMinutes,
+        runOnlyScript = runOnlyScript,
+        requestMethodFilter = requestMethodFilter,
+        defaultButtonResIdForDialog = defaultButtonResIdForDialog,
+        editTextIdsToIgnore = editTextIdsToIgnore,
+        editTextValueGeneratorsById = editTextValueGeneratorsById,
+        editTextValueGeneratorsByHint = editTextValueGeneratorsByHint
+    )
+
     companion object{
         const val MAX_TEST_RUN_TIME_MINUTES: Int = 120
     }
