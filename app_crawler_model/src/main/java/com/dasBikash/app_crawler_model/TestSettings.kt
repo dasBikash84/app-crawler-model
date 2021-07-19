@@ -1,7 +1,9 @@
 package com.dasBikash.app_crawler_model
 
+import android.app.Activity
 import android.view.View
 import androidx.annotation.Keep
+import androidx.fragment.app.Fragment
 
 
 /**
@@ -35,9 +37,9 @@ import androidx.annotation.Keep
  * has to be provided.
  *
  * @property editTextValueGeneratorsById A map of `resource id` to `input value generator function` to calculate input value for matching
- * `EditText` in auto test mode. `String` key has to be fully qualified resource identifier in the form of "package:type/entry" for target `Edittext`
+ * `EditText` in auto test mode. `String` key has to be fully qualified resource identifier in the form of "package:type/entry" for target `EditText`
  * and for map `value`, a generator function has to be provided, which will be called if ID match found during app crawler action, injecting
- * subject EditText as View and corresponding resource id as String parameters.
+ * subject EditText,parent Fragment(if any) and Activity instances as parameters.
  *
  * Example param instance could be as below:
  *
@@ -55,8 +57,8 @@ import androidx.annotation.Keep
  *
  * @property editTextValueGeneratorsByHint A map of `hint` to `input value generator function` to calculate input value for matching
  * `EditText` in auto test mode. `String` key is `hint` text of target `Edittext` and for map `value`, a generator function has to be provided,
- * which will be called if `hint` match found during app crawler action, injecting subject EditText as View and corresponding `hint` as
- * String parameters.
+ * which will be called if `hint` match found during app crawler action, injecting subject
+ * EditText,parent Fragment(if any) and Activity instances as parameters.
  *
  * Example param instance could be as below:
  *
@@ -84,8 +86,8 @@ data class TestSettings(
     val requestMethodFilter: RequestMethodFilter? = null,
     val defaultButtonResIdForDialog:String?=null,
     val editTextIdsToIgnore:List<String>? = null,
-    val editTextValueGeneratorsById:Map<String,(View, String) -> String>? = null,
-    val editTextValueGeneratorsByHint:Map<String,(View, String) -> String>? = null,
+    val editTextValueGeneratorsById:Map<String,(View, Fragment?, Activity?) -> String>? = null,
+    val editTextValueGeneratorsByHint:Map<String,(View, Fragment?, Activity?) -> String>? = null,
 ){
     constructor(
         testScriptPath:String?=null,
@@ -96,8 +98,8 @@ data class TestSettings(
         requestMethodFilter: RequestMethodFilter? = null,
         defaultButtonResIdForDialog:String?=null,
         editTextIdsToIgnore:List<String>? = null,
-        editTextValueGeneratorsById:Map<String,(View, String) -> String>? = null,
-        editTextValueGeneratorsByHint:Map<String,(View, String) -> String>? = null
+        editTextValueGeneratorsById:Map<String,(View, Fragment?, Activity?) -> String>? = null,
+        editTextValueGeneratorsByHint:Map<String,(View, Fragment?, Activity?) -> String>? = null
     ):this(
         testScriptPaths = testScriptPath?.let { listOf(it) },
         useFilesDirForReport = useFilesDirForReport,
