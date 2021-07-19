@@ -90,7 +90,7 @@ data class TestSettings(
     val editTextValueGeneratorsByHint:Map<String,(View, Fragment?, Activity?) -> String>? = null,
 ){
     constructor(
-        testScriptPath:String?=null,
+        testScriptPath:String,
         useFilesDirForReport:Boolean = false,
         enableClickBlocker:Boolean = true,
         maxRunTimeMinutes: Int = 5,
@@ -101,7 +101,7 @@ data class TestSettings(
         editTextValueGeneratorsById:Map<String,(View, Fragment?, Activity?) -> String>? = null,
         editTextValueGeneratorsByHint:Map<String,(View, Fragment?, Activity?) -> String>? = null
     ):this(
-        testScriptPaths = testScriptPath?.let { listOf(it) },
+        testScriptPaths = listOf(testScriptPath),
         useFilesDirForReport = useFilesDirForReport,
         enableClickBlocker = enableClickBlocker,
         maxRunTimeMinutes = maxRunTimeMinutes,
