@@ -4,10 +4,13 @@ import android.app.Activity
 import android.view.View
 import androidx.annotation.Keep
 import androidx.fragment.app.Fragment
+import java.util.*
 
 
 /**
  * Class to provide test settings during test launch
+ *
+ * @property testSessionId Unique test session ID. For duplicate ids, test requests will be ignored.
  *
  * @property testScriptPaths List of `Remote/local(Private app storage)/assets` script paths, if null given then
  *                          auto test will run
@@ -32,85 +35,65 @@ import androidx.fragment.app.Fragment
  *
  * ### With `null` RequestMethodFilter no api call will be restricted.
  *
- * @property editTextIdsToIgnore List of `EditText` resource identifiers that are to be ignored and
- * no text input performed during auto(unscripted) test. A fully qualified resource identifier in the form of "package:type/entry"
+ * @property idsToIgnoreInAutoCrawling List of `View` resource identifiers that are to be ignored and
+ * no action to be performed on those during auto(unscripted) test. A fully qualified resource identifier in the form of "package:type/entry"
  * has to be provided.
  *
- * @property editTextValueGeneratorsById A map of `resource id` to `input value generator function` to calculate input value for matching
- * `EditText` in auto test mode. `String` key has to be fully qualified resource identifier in the form of "package:type/entry" for target `EditText`
- * and for map `value`, a generator function has to be provided, which will be called if ID match found during app crawler action, injecting
- * subject EditText,parent Fragment(if any) and Activity instances as parameters.
+ * @property idsForManualActionInAutoCrawling List of `View` resource identifiers for which registered
+ * handler will be called in auto crawling mode. A fully qualified resource identifier in the form of "package:type/entry"
+ * has to be provided.
+ *
+ * @property editTextValueMap A map of `resource id` to `value` to calculate input value for matching
+ * `EditText` views. `String` key has to be fully qualified resource identifier in the form of "package:type/entry" for target `EditText`.
  *
  * Example param instance could be as below:
  *
  * ```
- *   editTextValueGeneratorsById = mapOf(
- *       "com.example.package_name:id/etQuery" to { view, resId -> "query_value"},
- *       "com.example.package_name:id/etData" to { view, resId -> "data_value"},
- *       "com.example.package_name:id/etUserName" to { view, resId -> "data_value"},
+ *   editTextValueMap = mapOf(
+ *       "com.example.package_name:id/etUserName" to "habul@example.com",
+ *       "com.example.package_name:id/etPassword" to "habul1234",
+ *       "com.example.package_name:id/etPhone" to "01555123456",
  *   )
  *```
- *
- * as `view` and `resource id` is injected into the generator function, input value of target
- * EditText can be calculated according to app state.
- *
- *
- * @property editTextValueGeneratorsByHint A map of `hint` to `input value generator function` to calculate input value for matching
- * `EditText` in auto test mode. `String` key is `hint` text of target `Edittext` and for map `value`, a generator function has to be provided,
- * which will be called if `hint` match found during app crawler action, injecting subject
- * EditText,parent Fragment(if any) and Activity instances as parameters.
- *
- * Example param instance could be as below:
- *
- * ```
- *   editTextValueGeneratorsById = mapOf(
- *       "hint_query" to { view, resId -> "query_value"},
- *       "hint_Data" to { view, resId -> "data_value"},
- *       "hint_UserName" to { view, resId -> "data_value"},
- *   )
- *```
- *
- * as `view` and `hint` is injected into the generator function, input value of target
- * EditText can be calculated according to app state.
  *
  * For more example code please [`visit`](https://github.com/dasBikash84/app-crawler)
  *
  * */
 @Keep
 data class TestSettings(
+    val testSessionId:String = UUID.randomUUID().toString(),
     val testScriptPaths:List<String>?=null,
     val useFilesDirForReport:Boolean = false,
     val enableClickBlocker:Boolean = true,
     val maxRunTimeMinutes: Int = 5,
     val runOnlyScript: Boolean = false,
     val requestMethodFilter: RequestMethodFilter? = null,
-    val defaultButtonResIdForDialog:String?=null,
-    val editTextIdsToIgnore:List<String>? = null,
-    val editTextValueGeneratorsById:Map<String,(View, Fragment?, Activity?) -> String>? = null,
-    val editTextValueGeneratorsByHint:Map<String,(View, Fragment?, Activity?) -> String>? = null,
+    val editTextValueMap:Map<String,String>? = null,
+    val idsToIgnoreInAutoCrawling:List<String>? = null,
+    val idsForManualActionInAutoCrawling:List<String>? = null
 ){
     constructor(
+        testSessionId:String = UUID.randomUUID().toString(),
         testScriptPath:String,
         useFilesDirForReport:Boolean = false,
         enableClickBlocker:Boolean = true,
         maxRunTimeMinutes: Int = 5,
         runOnlyScript: Boolean = false,
         requestMethodFilter: RequestMethodFilter? = null,
-        defaultButtonResIdForDialog:String?=null,
-        editTextIdsToIgnore:List<String>? = null,
-        editTextValueGeneratorsById:Map<String,(View, Fragment?, Activity?) -> String>? = null,
-        editTextValueGeneratorsByHint:Map<String,(View, Fragment?, Activity?) -> String>? = null
+        editTextValueMap:Map<String,String>? = null,
+        idsToIgnoreInAutoCrawling:List<String>? = null,
+        idsForManualActionInAutoCrawling:List<String>? = null
     ):this(
+        testSessionId = testSessionId,
         testScriptPaths = listOf(testScriptPath),
         useFilesDirForReport = useFilesDirForReport,
         enableClickBlocker = enableClickBlocker,
         maxRunTimeMinutes = maxRunTimeMinutes,
         runOnlyScript = runOnlyScript,
         requestMethodFilter = requestMethodFilter,
-        defaultButtonResIdForDialog = defaultButtonResIdForDialog,
-        editTextIdsToIgnore = editTextIdsToIgnore,
-        editTextValueGeneratorsById = editTextValueGeneratorsById,
-        editTextValueGeneratorsByHint = editTextValueGeneratorsByHint
+        editTextValueMap = editTextValueMap,
+        idsToIgnoreInAutoCrawling = idsToIgnoreInAutoCrawling,
+        idsForManualActionInAutoCrawling = idsForManualActionInAutoCrawling
     )
 
     companion object{
