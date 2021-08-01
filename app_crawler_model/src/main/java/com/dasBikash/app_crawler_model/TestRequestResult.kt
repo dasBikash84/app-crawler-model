@@ -5,13 +5,15 @@ import androidx.annotation.Keep
 /**
  * Class for test request result
  *
- * @property testLaunched will be true if test launched else false
+ * @property sessionId Test session unique id
+ * @property validRequest will be true if valid settings else false
  * @property causeOfFailure if test launch fails then cause string else null
  *
  * @author Bikash Das(das.bikash.dev@gmail.com)
  * */
 @Keep
 data class TestRequestResult(
-    val testLaunched:Boolean,
+    val sessionId:Long,
+    val validRequest:Boolean,
     val causeOfFailure:String?
 )

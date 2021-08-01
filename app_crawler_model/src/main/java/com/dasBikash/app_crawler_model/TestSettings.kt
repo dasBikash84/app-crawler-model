@@ -15,8 +15,6 @@ import java.util.*
  * @property testScriptPaths List of `Remote/local(Private app storage)/assets` script paths, if null given then
  *                          auto test will run
  *
- * @property useFilesDirForReport for true report files will be saved in `files` directory else in `cache
- *                              directory of respective app's private storage
  * @property enableClickBlocker if true all touch events will be blocked during test
  *
  * @property maxRunTimeMinutes Maximum test run time in minutes (>=120 will be truncated to 120)
@@ -61,11 +59,10 @@ import java.util.*
  * */
 @Keep
 data class TestSettings(
-    val testSessionId:String = UUID.randomUUID().toString(),
+    val testSessionId:Long = System.nanoTime(),
     val testScriptPaths:List<String>?=null,
-    val useFilesDirForReport:Boolean = false,
     val enableClickBlocker:Boolean = true,
-    val maxRunTimeMinutes: Int = 5,
+    val maxRunTimeMinutes: Int = DEFAULT_TEST_RUN_TIME_MINUTES,
     val runOnlyScript: Boolean = false,
     val requestMethodFilter: RequestMethodFilter? = null,
     val editTextValueMap:Map<String,String>? = null,
@@ -73,11 +70,10 @@ data class TestSettings(
     val idsForManualActionInAutoCrawling:List<String>? = null
 ){
     constructor(
-        testSessionId:String = UUID.randomUUID().toString(),
+        testSessionId:Long = System.nanoTime(),
         testScriptPath:String,
-        useFilesDirForReport:Boolean = false,
         enableClickBlocker:Boolean = true,
-        maxRunTimeMinutes: Int = 5,
+        maxRunTimeMinutes: Int = DEFAULT_TEST_RUN_TIME_MINUTES,
         runOnlyScript: Boolean = false,
         requestMethodFilter: RequestMethodFilter? = null,
         editTextValueMap:Map<String,String>? = null,
@@ -86,7 +82,6 @@ data class TestSettings(
     ):this(
         testSessionId = testSessionId,
         testScriptPaths = listOf(testScriptPath),
-        useFilesDirForReport = useFilesDirForReport,
         enableClickBlocker = enableClickBlocker,
         maxRunTimeMinutes = maxRunTimeMinutes,
         runOnlyScript = runOnlyScript,
@@ -97,6 +92,7 @@ data class TestSettings(
     )
 
     companion object{
+        const val DEFAULT_TEST_RUN_TIME_MINUTES: Int = 5
         const val MAX_TEST_RUN_TIME_MINUTES: Int = 120
     }
 }
